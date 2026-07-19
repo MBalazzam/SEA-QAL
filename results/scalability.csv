@@ -1,0 +1,6 @@
+Edge Nodes,QUBO Size,QUBO Construction Time,Solver Runtime,Memory Consumption,Convergence Epochs
+5,25,0.12,0.35,220,17
+10,100,0.28,0.72,310,18
+20,400,0.61,1.54,520,19
+40,1600,1.35,3.21,890,21
+60,3600,2.45,5.84,1320,23
