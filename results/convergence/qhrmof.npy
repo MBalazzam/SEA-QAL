@@ -2,7 +2,7 @@
 Generate QHRMOF convergence results.
 
 Output:
-results/convergence/qhrmof.py
+results/convergence/qhrmof.npy
 
 
 Shape:
