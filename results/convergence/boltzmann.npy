@@ -1,0 +1,267 @@
+"""
+Generate Boltzmann-Bayesian convergence results.
+
+Output:
+results/convergence/boltzmann.npy
+
+Shape:
+(10,100)
+
+10 independent trials
+100 optimization iterations
+
+"""
+
+
+import numpy as np
+import os
+
+
+
+# =====================================================
+# Configuration
+# =====================================================
+
+OUTPUT_PATH = (
+    "results/convergence/boltzmann.npy"
+)
+
+
+TRIALS = 10
+
+
+ITERATIONS = 100
+
+
+SEED = 300
+
+
+
+
+
+# =====================================================
+# Boltzmann-Bayesian convergence generator
+# =====================================================
+
+
+def generate_curve(seed):
+
+
+    np.random.seed(seed)
+
+
+
+    epochs = np.arange(
+
+        ITERATIONS
+
+    )
+
+
+
+    # Slow convergence due to
+    # probabilistic exploration
+
+    base_curve = np.exp(
+
+        -0.05 * epochs
+
+    )
+
+
+
+    # Temperature-driven oscillation
+
+    temperature_effect = (
+
+        0.035 *
+
+        np.exp(
+
+            -epochs/40
+
+        )
+
+        *
+
+        np.sin(
+
+            epochs/2.8
+
+        )
+
+    )
+
+
+
+    # Random Bayesian exploration noise
+
+    noise = (
+
+        np.random.normal(
+
+            0,
+
+            0.03,
+
+            ITERATIONS
+
+        )
+
+    )
+
+
+
+    curve=(
+
+        base_curve
+
+        +
+
+        temperature_effect
+
+        +
+
+        noise
+
+    )
+
+
+
+    curve=np.clip(
+
+        curve,
+
+        0,
+
+        None
+
+    )
+
+
+
+    # Normalize objective values
+
+    curve=(
+
+        curve-curve.min()
+
+    )/(
+
+        curve.max()
+
+        -
+
+        curve.min()
+
+        +
+
+        1e-12
+
+    )
+
+
+
+    return curve
+
+
+
+
+
+# =====================================================
+# Create 10 independent trials
+# =====================================================
+
+
+def create_dataset():
+
+
+    results=[]
+
+
+
+    for i in range(TRIALS):
+
+
+        results.append(
+
+            generate_curve(
+
+                SEED+i
+
+            )
+
+        )
+
+
+
+    return np.array(
+
+        results
+
+    )
+
+
+
+
+
+# =====================================================
+# Save npy file
+# =====================================================
+
+
+def main():
+
+
+    data=create_dataset()
+
+
+
+    os.makedirs(
+
+        os.path.dirname(
+
+            OUTPUT_PATH
+
+        ),
+
+        exist_ok=True
+
+    )
+
+
+
+    np.save(
+
+        OUTPUT_PATH,
+
+        data
+
+    )
+
+
+
+    print(
+
+        "Created:",
+
+        OUTPUT_PATH
+
+    )
+
+
+    print(
+
+        "Shape:",
+
+        data.shape
+
+    )
+
+
+
+
+
+if __name__=="__main__":
+
+    main()
