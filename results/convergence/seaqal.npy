@@ -2,7 +2,7 @@
 Generate SEA-QAL convergence result file.
 
 Output:
-results/convergence/seaqal.py
+results/convergence/seaqal.npy
 
 
 Shape:
