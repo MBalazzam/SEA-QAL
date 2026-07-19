@@ -81,11 +81,13 @@ $$
 
 
 The normalized semantic components 
+$$
 \(
 \tilde{g_i^t},
 \tilde{u_i^t},
 \tilde{a_i^t}
 \)
+$$
 are obtained before aggregation to avoid scale imbalance among heterogeneous semantic indicators.
 
 
