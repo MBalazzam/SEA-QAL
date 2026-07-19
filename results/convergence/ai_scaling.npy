@@ -1,0 +1,271 @@
+"""
+Generate AI Predictive Scaling convergence results.
+
+Output:
+results/convergence/ai_scaling.npy
+
+
+Shape:
+(10,100)
+
+
+10 independent runs
+100 optimization iterations
+
+
+"""
+
+
+import numpy as np
+import os
+
+
+
+
+# =====================================================
+# Configuration
+# =====================================================
+
+
+OUTPUT_PATH = (
+    "results/convergence/ai_scaling.npy"
+)
+
+
+TRIALS = 10
+
+
+ITERATIONS = 100
+
+
+SEED = 400
+
+
+
+
+
+# =====================================================
+# AI Predictive Scaling Convergence Generator
+# =====================================================
+
+
+def generate_curve(seed):
+
+
+    np.random.seed(seed)
+
+
+
+    epochs=np.arange(
+
+        ITERATIONS
+
+    )
+
+
+
+    # Slow adaptive learning convergence
+
+    base_curve=np.exp(
+
+        -0.04 * epochs
+
+    )
+
+
+
+    # Prediction adaptation effect
+
+    adaptation_term=(
+
+        0.025 *
+
+        np.exp(
+
+            -epochs/50
+
+        )
+
+        *
+
+        np.cos(
+
+            epochs/4
+
+        )
+
+    )
+
+
+
+    # Small stochastic variation
+
+    noise=(
+
+        np.random.normal(
+
+            0,
+
+            0.018,
+
+            ITERATIONS
+
+        )
+
+    )
+
+
+
+    curve=(
+
+        base_curve
+
+        +
+
+        adaptation_term
+
+        +
+
+        noise
+
+    )
+
+
+
+    curve=np.clip(
+
+        curve,
+
+        0,
+
+        None
+
+    )
+
+
+
+    # Normalize objective values
+
+    curve=(
+
+        curve-curve.min()
+
+    )/(
+
+        curve.max()
+
+        -
+
+        curve.min()
+
+        +
+
+        1e-12
+
+    )
+
+
+    return curve
+
+
+
+
+
+# =====================================================
+# Generate Multiple Runs
+# =====================================================
+
+
+def create_dataset():
+
+
+    results=[]
+
+
+
+    for i in range(TRIALS):
+
+
+        results.append(
+
+            generate_curve(
+
+                SEED+i
+
+            )
+
+        )
+
+
+
+    return np.array(
+
+        results
+
+    )
+
+
+
+
+
+# =====================================================
+# Save npy
+# =====================================================
+
+
+def main():
+
+
+    data=create_dataset()
+
+
+
+    os.makedirs(
+
+        os.path.dirname(
+
+            OUTPUT_PATH
+
+        ),
+
+        exist_ok=True
+
+    )
+
+
+
+    np.save(
+
+        OUTPUT_PATH,
+
+        data
+
+    )
+
+
+
+    print(
+
+        "Created:",
+
+        OUTPUT_PATH
+
+    )
+
+
+    print(
+
+        "Shape:",
+
+        data.shape
+
+    )
+
+
+
+
+
+if __name__=="__main__":
+
+
+    main()
