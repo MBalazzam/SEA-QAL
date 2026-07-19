@@ -1,0 +1,224 @@
+# SEA-QAL experimental configurations
+
+experiments:
+
+
+  # Main comparison experiment
+  main_comparison:
+
+    enabled: true
+
+    datasets:
+      - CIFAR10
+      - HAR
+      - Edge-IIoTset
+
+
+    runs:
+      repetitions: 10
+      random_seed:
+        type: different
+
+
+    methods:
+
+      proposed:
+        name: SEA-QAL
+        enabled: true
+
+
+      baselines:
+
+        - QHRMOF
+
+        - Quantum_PSO_Offloading
+
+        - Boltzmann_Bayesian
+
+        - AI_Predictive_Scaling
+
+
+
+    metrics:
+
+      primary:
+        - Accuracy
+        - Energy
+        - Latency
+
+      composite:
+        - Sustainability_Index
+
+
+
+  # Semantic sensitivity analysis
+
+  semantic_sensitivity:
+
+    enabled: true
+
+
+    configurations:
+
+
+      balanced:
+
+        wg: 0.33
+        wu: 0.33
+        wa: 0.33
+
+
+      gradient_dominant:
+
+        wg: 0.60
+        wu: 0.20
+        wa: 0.20
+
+
+      uncertainty_dominant:
+
+        wg: 0.20
+        wu: 0.60
+        wa: 0.20
+
+
+      attention_dominant:
+
+        wg: 0.20
+        wu: 0.20
+        wa: 0.60
+
+
+
+  # Objective weight sensitivity
+
+  objective_sensitivity:
+
+
+    enabled: true
+
+
+    configurations:
+
+
+      accuracy_oriented:
+
+        alpha: 0.60
+        beta: 0.20
+        gamma: 0.20
+
+
+
+      balanced:
+
+        alpha: 0.33
+        beta: 0.33
+        gamma: 0.34
+
+
+
+      energy_oriented:
+
+        alpha: 0.20
+        beta: 0.60
+        gamma: 0.20
+
+
+
+      semantic_oriented:
+
+        alpha: 0.20
+        beta: 0.20
+        gamma: 0.60
+
+
+
+  # Ablation experiments
+
+  ablation:
+
+
+    enabled: true
+
+
+    variants:
+
+      full_model:
+        semantic_module: true
+        qubo_interaction: true
+        federation: true
+        feedback_control: true
+
+
+      without_semantic:
+        semantic_module: false
+
+
+      without_qubo_coupling:
+        qubo_interaction: false
+
+
+      without_feedback:
+
+        feedback_control: false
+
+
+      semantic_only:
+
+        energy_objective: false
+
+
+      energy_only:
+
+        semantic_objective: false
+
+
+      non_federated:
+
+        federation: false
+
+
+
+  # Scalability experiment
+
+  scalability:
+
+
+    enabled: true
+
+
+    edge_nodes:
+
+      values:
+        - 5
+        - 10
+        - 20
+        - 40
+        - 60
+
+
+    measurements:
+
+      - qubo_construction_time
+      - solver_runtime
+      - memory_usage
+      - convergence_epochs
+
+
+
+  # Convergence experiment
+
+  convergence:
+
+
+    enabled: true
+
+
+    trials: 10
+
+
+    stopping:
+
+      tolerance: 0.0001
+
+      stable_iterations: 10
